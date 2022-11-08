@@ -1,0 +1,91 @@
+{% include 'templates/base.html' %}
+
+
+{% block body %}
+<div>
+    <div class='container pt-4'>
+        <div class="row  p-0 mt-4">
+            <div class="col-lg-4  shadow p-0">
+                <div class="alert alert-info">
+                    <h2>Add New TODO</h2>
+                </div>
+                <div class="container">
+                    <form action="addtodo" method="POST">
+                        {% csrf_token %}
+                       <div>
+                        <input type="tel" id="form3Example3" name='title' class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example3">title</label>
+                       </div>
+                       <div>
+                        <input type="text" id="form3Example3" name='status' class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example3">status</label>
+                       </div>
+                       <div>
+                        <input type="number" id="form3Example3" name='priority' class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example3">priority</label>
+                       </div>
+                       <div>
+                        <button type="submit" class="btn btn-primary btn-lg"
+                         style="padding-left: 2.5rem; padding-right: 2.5rem;">Submit</button>
+                       </div>
+                    </form>
+                </div>
+            </div>
+            {% if todos|length == 0 %}
+            
+              <div class="col p-5">
+                <br>
+                <br>
+                <div  class="alert alert-info text-center">
+                  <p class="" style="font-size: 30px;">No TODO yet</p>
+                </div>
+                <br>
+                <br>
+              </div>
+              
+            {% else %} 
+            <div class="col">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Sr.no</th>
+                      <th scope="col">Title</th>
+                      <th scope="col">status</th>
+                      <th scope="col">Priority</th>
+                      <th scope="col">date</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  {% for todo in todos  %}
+                  <tbody>
+                      <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{todo.title}}</td>
+                        <td>
+                          {% if todo.status == 'P' %}
+                          ⏰
+                          {% else %}
+                          ✅
+                          {% endif %}
+                        </td>
+                        <td>{{todo.priority}}</td>
+                        <td>{{todo.date}}</td>
+                        <td>
+                          <a href='remove/{{todo.id}}' title="Delete" >🗑️</a> 
+                          {% if todo.status == 'P' %}
+                            <a href='change_status/{{todo.id}}/C' title="Mark completed" >✅</a>
+                          {% else %}
+                            <a href='change_status/{{todo.id}}/P' title="Mark pending">⏰</a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      
+                    </tbody>
+                  {% endfor %}
+                </table>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
